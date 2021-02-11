@@ -1,0 +1,109 @@
+version: 0.1
+backend:
+  phases:
+    preBuild:
+      commands:
+        # - echo "env:"
+        # - env
+        - echo $NODE_ENV
+        - node -v
+        - npm -v
+        - yarn -v
+        - amplify -v
+        - npm config set "@fortawesome:registry" https://npm.fontawesome.com/
+        - npm config set "//npm.fontawesome.com/:_authToken" $FONTAWESOME_NPM_READ_TOKEN
+        - yarn install --pure-lockfile --production=false
+        # Build Sharp on Lambda S3 Trigger
+        # - cd amplify/backend/function/S3Triggerc3d87a15/src/
+        # - npm i
+        # - npm run build-sharp
+        # - cd -
+        # - nvm use 12
+        # - node -v
+        # - npm -v
+        # - amplify -v
+        - echo "AWS_JOB_ID:" $AWS_JOB_ID
+        - echo "AWS_APP_ID:" $AWS_APP_ID
+        - echo "AWS_BRANCH:" $AWS_BRANCH
+        - npm i -g typescript@^3
+        # - npm i -g jq
+        - echo "END preBuild"
+    build:
+      commands:
+        - node -v
+        - npm -v
+        - which amplify
+        - amplify -v
+        - which tsc
+        - tsc -v
+        - "# Execute Amplify CLI with the helper script"
+        - amplifyPush -e $AWS_BRANCH --simple
+        # - ./build-additional-backend-pre.sh
+        # - ./build-backend.sh
+        # - ./build-additional-backend-post.sh
+        - ls -al src
+        - cat src/aws-exports.js
+        - echo "END build"
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # - nvm use 10
+        - node -v
+        - npm -v
+        - which amplify
+        - amplify -v
+        - echo $AWS_BRANCH
+        - env | grep VUE_APP
+        # - yarn install --pure-lockfile --production=false
+        # - export ENV_FILES_BUCKET="bucket-name"
+        # - aws s3 cp s3://$ENV_FILES_BUCKET/$PROJECT_NAME/$USER_BRANCH/.env ./.env
+        - echo "END preBuild"
+    build:
+      commands:
+        - ls -al src
+        - yarn build
+        - echo "END build"
+    postBuild:
+      commands:
+        - echo "AWS-EXPORTS:"
+        - cat src/aws-exports.js
+        - cat dist/manifest.json
+        - echo "END postBuild"
+  artifacts:
+    baseDirectory: dist
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
+test:
+  artifacts:
+    baseDirectory: tests
+    configFilePath: "**/cypress.json"
+    files:
+      - "**/*.png"
+      - "**/*.mp4"
+  phases:
+    preTest:
+      commands:
+        - yarn install --pure-lockfile --production=false
+        # - npm install cypress
+        # - npm ci
+        # - npm install wait-on
+        # - npm install mocha mochawesome mochawesome-merge mochawesome-report-generator
+        # # - 'npm start & npx wait-on ${BASE_URL}:8443'
+        # - 'npm start & npx wait-on https://localhost:8443'
+    test:
+      commands:
+        - "test:unit"
+        - yarn test:unit
+        # - "test:e2e"
+        # - yarn test:e2e
+        # - ls -al ./node_modules/@vue/cli-service
+        # # - "./node_modules/@vue/cli-service/bin/vue-cli-service test:e2e --headless --record --key $CYPRESS_RECORD_KEY"
+        # # - "yarn test:e2e --headless --record --key $CYPRESS_RECORD_KEY"
+        # - 'npx cypress run --reporter mochawesome --reporter-options "reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss"'
+    # postTest:
+    #   commands:
+    #     - npx mochawesome-merge cypress/report/mochawesome-report/mochawesome*.json > cypress/report/mochawesome.json
