@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-pablobuildtests-dev-232126-authRole",
+      "UnauthRoleArn": "arn:aws:iam::460288031152:role/amplify-pablobuildtests-dev-232126-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::460288031152:role/amplify-pablobuildtests-dev-232126-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-pablobuildtests-dev-232126-deployment",
+      "UnauthRoleName": "amplify-pablobuildtests-dev-232126-unauthRole",
+      "StackName": "amplify-pablobuildtests-dev-232126",
+      "StackId": "arn:aws:cloudformation:us-east-2:460288031152:stack/amplify-pablobuildtests-dev-232126/de700a10-6cbf-11eb-b974-0211fe3b5f82",
+      "AmplifyAppId": "dpavcpox9upfb"
+    }
+  }
+}
