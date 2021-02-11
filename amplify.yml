@@ -37,7 +37,7 @@ backend:
         - which tsc
         - tsc -v
         - "# Execute Amplify CLI with the helper script"
-        - amplifyPush -e $AWS_BRANCH --simple
+        - amplifyPush -e $AWS_BRANCH
         # - ./build-additional-backend-pre.sh
         # - ./build-backend.sh
         # - ./build-additional-backend-post.sh
